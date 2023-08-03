@@ -6,13 +6,9 @@
 /*   By: oredoine <oredoine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 22:34:15 by oredoine          #+#    #+#             */
-/*   Updated: 2023/08/01 21:34:57 by oredoine         ###   ########.fr       */
+/*   Updated: 2023/08/03 10:36:56 by oredoine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-// #include<stdio.h>
-// #include<stdlib.h>
-// #include<unistd.h>
 
 #include "philo.h"
 

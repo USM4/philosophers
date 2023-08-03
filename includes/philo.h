@@ -6,7 +6,7 @@
 /*   By: oredoine <oredoine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 16:05:24 by oredoine          #+#    #+#             */
-/*   Updated: 2023/08/02 21:19:10 by oredoine         ###   ########.fr       */
+/*   Updated: 2023/08/03 10:15:02 by oredoine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,7 @@ extern void	ft_lstclear(t_llist **lst);
 extern void	ft_lstadd_back(t_llist **lst, t_llist *new);
 extern t_llist	*ft_lstnew(int nbr);
 extern t_llist	*ft_lstlast(t_llist *lst);
+extern int      check_arguments(int ac);
+extern int	check_is_clear_number(char *str);
 
 #endif
