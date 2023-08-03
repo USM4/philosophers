@@ -1,115 +1,106 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: oredoine <oredoine@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/31 16:06:48 by oredoine          #+#    #+#             */
-/*   Updated: 2023/08/03 20:08:12 by oredoine         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "philo.h"
 
-void fill_struct(t_philo *philos, char **av, int ac)
-{
-	philos->n_philos = ft_atoi(av[1]);
-	philos->time_to_die = ft_atoi(av[2]);
-	philos->time_to_eat = ft_atoi(av[3]);
-	philos->time_to_sleep = ft_atoi(av[4]);
-	if (ac == 6)
-		philos->n_t_e_p_m_e = ft_atoi(av[5]);
-	else
-		philos->n_t_e_p_m_e = 1;
-}
-
-int	check_envirement(t_philo philos)
-{
-	if(philos.n_t_e_p_m_e <= 0)
-	{
-		ft_putstr_fd("must be atleast the number one \n", 2);
-		return(0);
-	}
-	if(philos.n_philos <= 0)
-	{
-		ft_putstr_fd("must be atleast one philosopher \n", 2);
-		return(0);
-	}
-	if (philos.time_to_die < 0 || philos.time_to_eat < 0 || philos.time_to_sleep < 0)
-	{
-		ft_putstr_fd("the number must be positive\n", 2);
-		return (0);
-	}
-	return(1);	
-}
+// int	check_envirement(t_table philos)
+// {
+// 	if(philos.max_meals <= 0)
+// 	{
+// 		ft_putstr_fd("must be atleast the number one \n", 2);
+// 		return(0);
+// 	}
+// 	if(philos.n_philos <= 0)
+// 	{
+// 		ft_putstr_fd("must be atleast one philosopher \n", 2);
+// 		return(0);
+// 	}
+// 	if (philos.time_to_die < 0 || philos.time_to_eat < 0 || philos.time_to_sleep < 0)
+// 	{
+// 		ft_putstr_fd("the number must be positive\n", 2);
+// 		return (0);
+// 	}
+// 	return(1);	
+// }
 
 void* to_app(void *arg)
 {
-	t_philo *philos;
-
-	philos = (t_philo *) arg;
+	t_table	*table;
+	int		i;
+	
+	table = ((t_arg *)arg)->table;
+	i = ((t_arg *)arg)->philo_id;
 	while (1)
 	{
-		printf("philosopher is eating\n");
-		sleep(1);
-		printf("philosopher is sleeping\n");
-		sleep(1);
+		printf("%d is eating\n",i);
+		sleep(table->time_to_eat);
+		printf("%d is sleeping\n",i);
+		sleep(table->time_to_sleep);
+		printf("philosopher is thinking\n");
 	}
 }
 
-t_llist	*create_list_philos(t_philo *philo)
+t_philo	*create_list_philos(t_table *table)
 {
 	int i = 0;
-	t_llist *head;
+	t_philo *philos;
 	
-	head = NULL;
-	while(i < philo->n_philos)
+	philos = malloc(sizeof(t_philo) * table->n_philos);
+	if (!philos)
+		return (NULL);
+	while(i < table->n_philos)
 	{
-		ft_lstadd_back(&head, ft_lstnew(i + 1));
+		philos[i].philo_id = i;
+		philos[i].meal_count = 0;
+		pthread_mutex_init(&philos[i].fork, NULL);
 		i++;
 	}
-	return(head);
+	return (philos);
+
 }
 
 int main(int ac,char **av)
 {
 
 	int		i;
-	t_philo	philos;
-	t_llist *mylist = NULL;
+	// t_philo	philos;
+	t_table *table;
 
-	i = 1;
-	if (!check_arguments(ac))
-		return (1);
-	while (i < ac)
-	{
-		if (check_is_clear_number(av[i]) == 1)
-			break;
-		i++;
-	}
-	fill_struct(&philos, av, ac);
-	if(!check_envirement(philos))
-		return(1);
 	i = 0;
-	mylist = create_list_philos(&philos);
-
-
-	while (i < philos.n_philos)
+	// if (!check_arguments(ac))
+	// 	return (1);
+	// while (i < ac)
+	// {
+	// 	if (check_is_clear_number(av[i]) == 1)
+	// 		break;
+	// 	i++;
+	// }
+	// fill_struct(&philos, av, ac);
+	// if (!check_envirement(philos))
+	// 	return(1);
+	table = malloc(sizeof(t_table));
+	table->n_philos = ft_atoi(av[1]);
+	table->time_to_die = ft_atoi(av[2]);
+	table->time_to_eat = ft_atoi(av[3]);
+	table->time_to_sleep = ft_atoi(av[4]);
+	if (ac == 6)
+		table->max_meals = ft_atoi(av[5]);
+	else
+		table->max_meals = 1;
+	while (i < table->n_philos)
 	{
-		if (pthread_create(&philos.thread , NULL, to_app, mylist) != 0)
+		t_arg arg;
+		arg.table = table;
+		arg.philo_id = i;
+		if (pthread_create(&table->philos[i].thread_id , NULL, to_app, &arg) != 0)
 		{
 			perror("failed to create");
-			exit (1);
+			exit(1);
 		}
-		if (pthread_detach(philos.thread) != 0)
+		if (pthread_detach(table->philos[i].thread_id) != 0)
 		{
 			perror("failed to detach");
-			exit (1);
+			exit(1);
 		}
 		i++;
 	}
-
-	// sleep(10);
-	return (0);
+	sleep (200);
+		return (0);
 }
