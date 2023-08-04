@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: oredoine <oredoine@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/03 23:57:17 by oredoine          #+#    #+#             */
+/*   Updated: 2023/08/04 05:42:38 by oredoine         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 #define PHILO_H
 
@@ -10,7 +22,6 @@ typedef struct s_philo {
 	int 		meal_count;
 	pthread_mutex_t fork;
 	pthread_t 	thread_id;
-	int		philo_id;
 }   t_philo;
 
 typedef struct s_table {
@@ -25,6 +36,7 @@ typedef struct s_table {
 typedef struct s_arg {
 	t_table *table;
 	int	philo_id;
+	int flag;
 }	t_arg;
 
 // extern char	**ft_split(char const *s, char c);

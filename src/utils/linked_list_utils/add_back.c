@@ -1,40 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   add_back.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: oredoine <oredoine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/03 23:58:58 by oredoine          #+#    #+#             */
-/*   Updated: 2023/08/03 23:59:03 by oredoine         ###   ########.fr       */
+/*   Created: 2023/08/03 23:57:33 by oredoine          #+#    #+#             */
+/*   Updated: 2023/08/03 23:57:34 by oredoine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_atoi(const char *str)
+void	ft_lstadd_back(t_table **lst, t_table *new)
 {
-	int	i;
-	int	x;
-	int	s;
-
-	i = 0;
-	x = 0;
-	s = 0;
-	while ((str[i] >= 9 && str[i] <= 13) || str[i] == 32)
-		i++;
-	if (str[i] == '-' || str[i] == '+')
-	{
-		if (str[i] == '-')
-				s++;
-			i++;
-	}
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		x = x * 10 + str[i] - '0';
-			i++;
-	}
-	if (s % 2 == 1)
-		x *= -1;
-	return (x);
+	if (*lst)
+		ft_lstlast(*lst)->next = new;
+	else
+		*lst = new;
 }
