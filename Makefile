@@ -5,7 +5,7 @@ HEADERS= ./includes/philo.h
 MAIN = ./src/main.o
 SOURCES = ./src/utils/ft_split.o\
 	./src/utils/ft_atoi.o\
-	# ./src/utils/ft_putstr_fd.o\
+	./src/utils/ft_putstr_fd.o\
 	# ./src/utils/add_back.o\
 	# ./src/utils/clear.o\
 	# ./src/utils/new.o\
