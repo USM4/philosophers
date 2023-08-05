@@ -6,7 +6,7 @@
 /*   By: oredoine <oredoine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 23:57:17 by oredoine          #+#    #+#             */
-/*   Updated: 2023/08/05 02:51:42 by oredoine         ###   ########.fr       */
+/*   Updated: 2023/08/05 21:48:22 by oredoine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_table {
 	int		n_philos;
 	t_time 		time_to_die;
 	int 		time_to_eat;
-	int 		time_to_ft_sleep;
+	int 		time_to_sleep;
 	int 		max_meals;
 	t_time	start_time;
 	t_philo		*philos;
