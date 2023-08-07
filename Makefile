@@ -1,11 +1,12 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror #-fsanitize=thread -g
 NAME = philo
 HEADERS= ./includes/philo.h
 MAIN = ./src/main.o
 SOURCES = ./src/utils/ft_split.o\
 	./src/utils/ft_atoi.o\
 	./src/utils/ft_putstr_fd.o\
+	./src/utils/utils.o\
 	# ./src/utils/add_back.o\
 	# ./src/utils/clear.o\
 	# ./src/utils/new.o\
