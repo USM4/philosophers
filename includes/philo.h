@@ -6,7 +6,7 @@
 /*   By: oredoine <oredoine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 23:57:17 by oredoine          #+#    #+#             */
-/*   Updated: 2023/08/05 21:48:22 by oredoine         ###   ########.fr       */
+/*   Updated: 2023/08/06 00:32:11 by oredoine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_table {
 	int 		time_to_eat;
 	int 		time_to_sleep;
 	int 		max_meals;
+	pthread_mutex_t death;
 	t_time	start_time;
 	t_philo		*philos;
 }       t_table;
@@ -54,5 +55,4 @@ extern int	ft_atoi(const char *str);
 // extern t_table	*ft_lstlast(t_table *lst);
 extern int      check_arguments(int ac);
 extern int	check_is_clear_number(char *str);
-
 #endif

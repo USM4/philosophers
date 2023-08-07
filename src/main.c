@@ -6,7 +6,7 @@
 /*   By: oredoine <oredoine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 23:59:23 by oredoine          #+#    #+#             */
-/*   Updated: 2023/08/05 22:22:47 by oredoine         ###   ########.fr       */
+/*   Updated: 2023/08/07 01:03:09 by oredoine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,21 @@ void	 *to_app(void *arg)
 	argument = (t_arg *)arg;
 	table = argument->table;
 	int i = argument->philo_id;
-
-	if (argument->philo_id % 2 != 0)
-		usleep(50);
+	if ((i + 1) % 2 != 0)
+		usleep(200);
 	while (1)
 	{
 		pthread_mutex_lock(&table->philos[i].fork);
+		pthread_mutex_lock(&table->death);
+		printf("%lu : %d has taken a fork\n", current_time() - table->start_time, i + 1);
+		pthread_mutex_unlock(&table->death);
 		pthread_mutex_lock(&table->philos[(i + 1) % table->n_philos].fork);
+		pthread_mutex_lock(&table->death);
 		printf("%lu : %d has taken a fork\n", current_time() - table->start_time, i + 1);
-		printf("%lu : %d has taken a fork\n", current_time() - table->start_time, i + 1);
+		pthread_mutex_unlock(&table->death);
+		pthread_mutex_lock(&table->death);
 		printf("%lu : %d is eating\n", current_time() - table->start_time, i + 1);
+		pthread_mutex_unlock(&table->death);
 		table->philos[i].last_meal_time = current_time();
 		ft_sleep(table->time_to_eat);
 		table->philos[i].meal_count++;
@@ -69,16 +74,23 @@ void	 *to_app(void *arg)
 		pthread_mutex_unlock(&table->philos[(i + 1) % table->n_philos].fork);
 		if (table->max_meals > 0 && table->philos[i].meal_count >= table->max_meals)
 		{
+			pthread_mutex_lock(&table->death);
 			printf("%lu : %d is finish\n", current_time() - table->start_time, i + 1);
 			table->philos[i].finished = 1;
+			pthread_mutex_unlock(&table->death);
 			break ;
 		}
+		pthread_mutex_lock(&table->death); 
 		printf("%lu : %d is sleeping\n", current_time() - table->start_time, i + 1);
+		pthread_mutex_unlock(&table->death);
 		ft_sleep(table->time_to_sleep);
+		pthread_mutex_lock(&table->death);
 		printf("%lu : %d is thinking\n", current_time() - table->start_time, i + 1);
+		pthread_mutex_unlock(&table->death);
 	}
 	return (NULL);
 }
+
 t_philo	*create_list_philos(t_table *table)
 {
 	int i = 0;
@@ -91,6 +103,7 @@ t_philo	*create_list_philos(t_table *table)
 	{
 		philos[i].last_meal_time = current_time();
 		philos[i].meal_count = 0;
+		philos[i].finished = 0;
 		pthread_mutex_init(&philos[i].fork, NULL);
 		i++;
 	}
@@ -99,12 +112,10 @@ t_philo	*create_list_philos(t_table *table)
 
 int main(int ac,char **av)
 {
-	int flag = 0;
 	int		i;
 	// t_philo	philos;
 	t_table *table;
 	// int setter = 0;
-	i = 0;
 	// if (!check_arguments(ac))
 	// 	return (1);
 	// while (i < ac)
@@ -119,6 +130,7 @@ int main(int ac,char **av)
 	table = malloc(sizeof(t_table));
 	// if (!table)
 	// 	return(1);
+	pthread_mutex_init(&table->death, NULL);
 	table->n_philos = ft_atoi(av[1]);
 	table->time_to_die = ft_atoi(av[2]);
 	table->time_to_eat = ft_atoi(av[3]);
@@ -137,12 +149,14 @@ int main(int ac,char **av)
 		table->max_meals = -1;
 	table->philos = create_list_philos(table);
 	table->start_time = current_time();
-	t_arg *arg = malloc(sizeof(t_arg));
-	arg->table = table;
+	t_arg *arg = malloc(sizeof(t_arg) * table->n_philos);
+	
+	i = 0;
 	while (i < table->n_philos)
 	{
-		arg->philo_id = i;
-		if (pthread_create(&table->philos[i].thread_id , NULL, to_app, arg) != 0)
+		arg[i].table = table;
+		arg[i].philo_id = i;
+		if (pthread_create(&table->philos[i].thread_id , NULL, to_app, arg + i) != 0)
 		{
 			perror("failed to create");
 			exit(1);
@@ -160,15 +174,23 @@ int main(int ac,char **av)
 		i = 0;
 		while (i < table->n_philos)
 		{
-			if(table->time_to_die < (current_time() - table->philos[i].last_meal_time))
+			if (table->time_to_die <= (current_time() - table->philos[i].last_meal_time))
 			{
+				pthread_mutex_lock(&table->death);
 				printf("%lu : %d died\n", current_time() - table->start_time, i + 1);
-				flag = 1;
-				break;
+				return (0);
 			}
 			i++;
 		}
-		if (flag)
+		i = 0;
+		int flag = 0;
+		while (i < table->n_philos)
+		{
+			if (table->philos[i].finished == 1)
+				flag++;
+			i++;
+		}
+		if (table->n_philos == flag)
 			break;
 	}
 	return (0);
