@@ -6,7 +6,7 @@
 /*   By: oredoine <oredoine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 23:59:23 by oredoine          #+#    #+#             */
-/*   Updated: 2023/08/08 00:58:33 by oredoine         ###   ########.fr       */
+/*   Updated: 2023/08/08 02:44:38 by oredoine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	*to_app(void *arg)
 // 	system("leaks philo");
 // }
 
-void	controller(t_table *table)
+void	monitor_progress(t_table *table)
 {
 	int	i;
 	int	flag;
@@ -112,6 +112,7 @@ void	controller(t_table *table)
 		if (table->n_philos == flag)
 			break ;
 	}
+	freeing(table);
 }
 
 int	main(int ac, char **av)
@@ -133,12 +134,10 @@ int	main(int ac, char **av)
 	table->philos = create_list_philos(table);
 	table->start_time = current_time();
 	arg = malloc(sizeof(t_arg) * table->n_philos);
+	if (!arg)
+		return (1);
 	create_and_launch(table, arg);
 	free(arg);
-	controller(table);
-	destroy_philos_mutexes(table);
-	pthread_mutex_destroy(&table->death);
-	free(table);
-	free(table->philos);
+	monitor_progress(table);
 	return (0);
 }

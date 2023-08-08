@@ -8,6 +8,7 @@ SOURCES = ./src/utils/parsing.o\
 	./src/utils/ft_putstr_fd.o\
 	./src/utils/utils.o\
 	./src/utils/utils2.o\
+	./src/utils/freeing.o\
 
 
 all : $(NAME)

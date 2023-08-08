@@ -6,7 +6,7 @@
 /*   By: oredoine <oredoine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 23:57:17 by oredoine          #+#    #+#             */
-/*   Updated: 2023/08/08 01:08:02 by oredoine         ###   ########.fr       */
+/*   Updated: 2023/08/08 02:18:01 by oredoine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_arg {
 extern int		check_is_clear_number(char *str);
 extern void		ft_putstr_fd(char *s, int fd);
 extern int		ft_atoi(const char *str);
+extern void		freeing(t_table *table);
 extern int		check_arguments(int ac, char **av);
 extern int		check_is_clear_number(char *str);
 extern t_philo	*create_list_philos(t_table *table);

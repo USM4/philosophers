@@ -7,8 +7,9 @@
 
 EAT -> ft_sleep -> THINK
 
+pthread_detach: Thread goes its own way, you don't wait for it.
+pthread_join: You wait for a thread to finish before moving on.
 
-what is parallelism 
 what are threads
 what are mutex locks
 what is a deadlock
