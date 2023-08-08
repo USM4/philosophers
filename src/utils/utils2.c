@@ -6,7 +6,7 @@
 /*   By: oredoine <oredoine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 00:41:26 by oredoine          #+#    #+#             */
-/*   Updated: 2023/08/08 02:10:50 by oredoine         ###   ########.fr       */
+/*   Updated: 2023/08/08 14:31:32 by oredoine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,13 @@ void	create_and_launch(t_table *table, t_arg *arg)
 		if (pthread_create(&table->philos[i].thread_id, \
 		NULL, to_app, arg + i) != 0)
 		{
-			perror("failed to create");
-			exit(1);
+			ft_putstr_fd("failed to create", 2);
+			return ;
 		}
 		if (pthread_detach(table->philos[i].thread_id) != 0)
 		{
-			perror("failed to detach");
-			exit(1);
+			ft_putstr_fd("failed to detach", 2);
+			return ;
 		}
 		i++;
 	}
@@ -90,10 +90,10 @@ int	check_death(t_table *table)
 		pthread_mutex_lock(&table->philos[i].last_meal);
 		tmp = current_time() - table->philos[i].last_meal_time;
 		pthread_mutex_unlock(&table->philos[i].last_meal);
-		if (table->time_to_die <= tmp)
+		if (table->time_to_die <= (int)tmp)
 		{
 			pthread_mutex_lock(&table->death);
-			printf("%lu : %d died\n", current_time() - table->start_time, i + 1);
+			printf("%lu %d died\n", current_time() - table->start_time, i + 1);
 			destroy_philos_mutexes(table);
 			pthread_mutex_destroy(&table->death);
 			return (1);

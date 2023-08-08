@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror #-fsanitize=thread -g
+CFLAGS = -Wall -Wextra -Werror
 NAME = philo
 HEADERS= ./includes/philo.h
 MAIN = ./src/main.o

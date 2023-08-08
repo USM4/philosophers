@@ -6,7 +6,7 @@
 /*   By: oredoine <oredoine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/03 23:59:23 by oredoine          #+#    #+#             */
-/*   Updated: 2023/08/08 02:44:38 by oredoine         ###   ########.fr       */
+/*   Updated: 2023/08/08 14:00:37 by oredoine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,19 @@ void	executing_tasks(t_table *table, int index, t_tasks task)
 	{
 		pthread_mutex_lock(&table->philos[index].fork);
 		pthread_mutex_lock(&table->death);
-		printf("%lu : %d has taken a fork\n", current_time() - \
+		printf("%lu %d has taken a fork\n", current_time() - \
 		table->start_time, index + 1);
 		pthread_mutex_unlock(&table->death);
 		pthread_mutex_lock(&table->philos[(index + 1) % table->n_philos].fork);
 		pthread_mutex_lock(&table->death);
-		printf("%lu : %d has taken a fork\n", current_time() - \
+		printf("%lu %d has taken a fork\n", current_time() - \
 		table->start_time, index + 1);
 		pthread_mutex_unlock(&table->death);
 	}
 	else if (task == EATING)
 	{
 		pthread_mutex_lock(&table->death);
-		printf("%lu : %d is eating\n", current_time() - \
+		printf("%lu %d is eating\n", current_time() - \
 		table->start_time, index + 1);
 		pthread_mutex_unlock(&table->death);
 		pthread_mutex_lock(&table->philos[index].last_meal);
@@ -44,14 +44,14 @@ void	executing_tasks_2(t_table *table, int index, t_tasks task)
 	if (task == SLEEPING)
 	{
 		pthread_mutex_lock(&table->death);
-		printf("%lu : %d is sleeping\n", current_time() - \
+		printf("%lu %d is sleeping\n", current_time() - \
 		table->start_time, index + 1);
 		pthread_mutex_unlock(&table->death);
 	}
 	else if (task == THINKING)
 	{
 		pthread_mutex_lock(&table->death);
-		printf("%lu : %d is thinking\n", current_time() - \
+		printf("%lu %d is thinking\n", current_time() - \
 		table->start_time, index + 1);
 		pthread_mutex_unlock(&table->death);
 	}
@@ -84,11 +84,6 @@ void	*to_app(void *arg)
 	}
 	return (NULL);
 }
-
-// void leaks(void)
-// {
-// 	system("leaks philo");
-// }
 
 void	monitor_progress(t_table *table)
 {
